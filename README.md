@@ -1,5 +1,5 @@
 # Ergasia2_e18011_Charis_Antoniadi
-This project is about executing queries for a Mongodb database, using the pymongo module of python. The app2.py file contains eleven endpoints, each used for the POST, GET, PATCH and DELETE HTTP methods.
+This project is about executing queries for a Mongodb database, using the pymongo module of python. The app2.py file contains thirteen endpoints, each used for the POST, GET, PATCH and DELETE HTTP methods.
 
 ## Preparation
 Firstly we need to open a terminal window to start docker
