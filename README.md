@@ -786,10 +786,12 @@ curl -X PATCH localhost:5000/updateProduct -d '{"email":"insert email here", "pr
     FROM ubuntu:16.04 
     RUN apt-get update 
     RUN apt-get install -y python3 python3-dev python3-pip
-    RUN pip3 install flask pymongo  """installing the dependencies"""
+    # installing the dependencies
+    RUN pip3 install flask pymongo
     RUN mkdir /app
     COPY app2.py /app/app2.py
-    EXPOSE 5000 """specifying the port that the flask service will use"""
+    # specifying the port that the flask service will use
+    EXPOSE 5000
     WORKDIR /app
     ENTRYPOINT ["python3","-u","app2.py"] 
 ```
