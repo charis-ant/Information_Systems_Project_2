@@ -797,23 +797,23 @@ curl -X PATCH localhost:5000/updateProduct -d '{"email":"insert email here", "pr
 ```yaml
     version: '2'
     services:
-        mongodb:    //mongodb service
+        mongodb:    #mongodb service
             image: mongo
-            restart: always //policy in case the container crushes
+            restart: always #policy in case the container crushes
             container_name: mongodb3
-            ports:  //specifying the ports that will be used for the mongodb service
+            ports:  #specifying the ports that will be used for the mongodb service
             - 27017:27017
-            volumes:    //data maintenance (data is saved in the current folder)
+            volumes:    #data maintenance (data is saved in the current folder)
             - .:/data/db
-        flask-service:
-            build:  //building the flask container 
-                context: .  //the dockerfile and docker-compose.yml are located in the current folder
+        flask-service:   #flask service
+            build:  #building the flask container 
+                context: .  #the dockerfile and docker-compose.yml are located in the current folder
             restart: always
             container_name: flask
-            depends_on: //the flask service can start only if mongodb is up
+            depends_on: #the flask service can start only if mongodb is up
                 - mongodb
-            ports:  //specifying the ports that will be used for the flask service
+            ports:  #specifying the ports that will be used for the flask service
                 - 5000:5000
-            environment:    //specifying the access point to mongodb for the flask service
+            environment:    #specifying the access point to mongodb for the flask service
                 - "MONGO_HOSTNAME=mongodb"
 ```
