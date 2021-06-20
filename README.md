@@ -780,6 +780,10 @@ curl -X PATCH localhost:5000/updateProduct -d '{"email":"insert email here", "pr
     sudo docker-compose up -d
 ```
 
+<p>Output:</p>
+
+<img src="images/creating_done.png"/>
+     
 <p>In order for the command to work successfully, a dockerfile and a docker-compose.yml file have to be already created. Both of the files can be found bellow alongside with a brief explanation of the main/most important commands.</p>
 
 ```dockerfile
