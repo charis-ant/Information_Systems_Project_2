@@ -628,7 +628,7 @@ curl -X GET localhost:5000/viewOrderHistory -d '{"email":"insert email here"}' -
         return Response("No user with that email was found\n", status=500, mimetype='application/json')
 ```
 
-<h3 style="font-weight: bold">Delete User (DELETE)<h3>
+<h3 style="font-weight: bold">Delete User (DELETE)</h3>
 <p style="text-align:justify">The function delete_user is responsible for searching through the database for a user with the same email address as the one given by the user in the curl command and deleting them from the collection. The command to execute the query should be:</p>
 
 ```bash
