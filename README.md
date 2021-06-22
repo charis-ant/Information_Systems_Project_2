@@ -54,9 +54,9 @@ This project is about executing queries for a Mongodb database, using the pymong
             restart: always #policy in case the container crushes
             container_name: flask
             depends_on: #the flask service can start only if mongodb is up
-                - mongodb
+              - mongodb
             ports:  #specifying the ports that will be used for the flask service
-                - 5000:5000
+              - 5000:5000
             environment:    #specifying the access point to mongodb for the flask service
                 - "MONGO_HOSTNAME=mongodb"
 ```
