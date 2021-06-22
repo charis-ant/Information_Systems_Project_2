@@ -9,7 +9,7 @@ This project is about executing queries for a Mongodb database, using the pymong
 sudo dockerd
 ```
 
-<p>To start the containerization process (creation of the flask container and mongodb3 container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:
+<p>To start the containerization process (creation of the flask container and mongodb container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:
 
 ```bash
     sudo docker-compose up -d
@@ -21,18 +21,19 @@ sudo dockerd
      
 <p>In order for the command to work successfully, a dockerfile and a docker-compose.yml file have to be already created. Both of the files can be found bellow alongside with a brief explanation of the main/most important commands.</p>
 
-```dockerfile
+```dockerfile   
     FROM ubuntu:16.04 
     RUN apt-get update 
     RUN apt-get install -y python3 python3-dev python3-pip
     # installing the dependencies
     RUN pip3 install flask pymongo
     RUN mkdir /app
+    RUN mkdir -p /app/data
     COPY app2.py /app/app2.py
     # specifying the port that the flask service will use
     EXPOSE 5000
     WORKDIR /app
-    ENTRYPOINT ["python3","-u","app2.py"] 
+    ENTRYPOINT ["python3","-u","app2.py"]
 ```
 
 ```yaml
@@ -41,15 +42,15 @@ sudo dockerd
         mongodb:    #mongodb service
             image: mongo
             restart: always #policy in case the container crushes
-            container_name: mongodb3
+            container_name: mongodb
             ports:  #specifying the ports that will be used for the mongodb service
             - 27017:27017
-            volumes:    #data maintenance (data is saved in the current folder)
-            - .:/data/db
-        flask-service:   #flask service
-            build:  #building the flask container 
-                context: .  #the dockerfile and docker-compose.yml are located in the current folder
-            restart: always
+            volumes:    #data maintenance (data is saved in the subdirectory mongodb of current directory)
+            - ./mongodb/data:/data/db
+        flask-service:  #flask service
+            build:  #building the flask container
+                context: ./flask    #the dockerfile is located in the subdirectory flask of the current directory
+            restart: always #policy in case the container crushes
             container_name: flask
             depends_on: #the flask service can start only if mongodb is up
                 - mongodb
@@ -370,7 +371,7 @@ curl -X PATCH localhost:5000/deleteFromCart -d '{"email":"insert email here", "p
 
 <img src="images/delete_from_cart.png"/>
 
-<p style="text-align:justify">Besides the initial user and product searches through the Users and Products collections respectively, and then the user's category check and also the uuid check, a additional condition to find out if the user has or hasn't got a cart is implemented. If the user's cart is empty then a corresponding response will be printed. On the other hand if the user does have products in their cart, we have to find out if the product id given by the user matches a product id of any item in the cart. That is why the list method in line 453 of the app2.py file is used. In python3, the "keys" method returns an iterable set-like view object, not a list (but through the use of the list method, that object is turned to a list). And that way the comparison between the product's id and the cart_list's key name can return a true or false value, resulting in storing the corresponding index of the list to the cart_list_index variable, that had been previously assigned the value None. If the cart_list_index value turns out to be anything but None, the removal of the product follows, as well as the update of the 'cart' key's value. In case the product to be removed is the only product in user's cart, after its removal the complete 'cart' key of the collection is deleted. Now, to print the cart contents and the total price. The first element of the user's collection cart is stored to the total variable and the first element of the cart_list is removed, in order for the products and the total cost to be printed separately. In any other case, there will be a corresponding response depending on the problem the program faced, while processing the user's request.</p>
+<p style="text-align:justify">Besides the initial user and product searches through the Users and Products collections respectively, and then the user's category check and also the uuid check, a additional condition to find out if the user has or hasn't got a cart is implemented. If the user's cart is empty then a corresponding response will be printed. On the other hand if the user does have products in their cart, we have to find out if the product id given by the user matches a product id of any item in the cart. That is why the list method in line 456 of the app2.py file is used. In python3, the "keys" method returns an iterable set-like view object, not a list (but through the use of the list method, that object is turned to a list). And that way the comparison between the product's id and the cart_list's key name can return a true or false value, resulting in storing the corresponding index of the list to the cart_list_index variable, that had been previously assigned the value None. If the cart_list_index value turns out to be anything but None, the removal of the product follows, as well as the update of the 'cart' key's value. In case the product to be removed is the only product in user's cart, after its removal the complete 'cart' key of the collection is deleted. Now, to print the cart contents and the total price. The first element of the user's collection cart is stored to the total variable and the first element of the cart_list is removed, in order for the products and the total cost to be printed separately. In any other case, there will be a corresponding response depending on the problem the program faced, while processing the user's request.</p>
 
 ```python
     #Finding user with the given email address
