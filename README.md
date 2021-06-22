@@ -815,3 +815,9 @@ curl -X PATCH localhost:5000/updateProduct -d '{"email":"insert email here", "pr
         #Error response if user is not an admin
         return Response("User is not an admin\n", status=400, mimetype='application/json') 
 ```
+
+<h2 style="text-decoration: underline;">References</h2>
+    <p>https://stackoverflow.com/questions/15171622/mongoimport-of-json-file</p>
+    <p>https://stackoverflow.com/questions/24430220/e11000-duplicate-key-error-index-in-mongodb-mongoose</p>
+    <p>https://stackoverflow.com/questions/58150528/mongodb-atlas-mongoimport-issues-cannot-decode-array-into-a-d</p>
+    <p>https://stackoverflow.com/questions/37471929/docker-container-keeps-on-restarting-again-on-again/37473466</p>
