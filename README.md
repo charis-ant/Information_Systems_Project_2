@@ -1,35 +1,63 @@
 <h1>Ergasia2_e18011_Charis_Antoniadi</h1>
 This project is about executing queries for a Mongodb database, using the pymongo module of python. The app2.py file contains thirteen endpoints, each used for the POST, GET, PATCH and DELETE HTTP methods.
 
-<h2>Preparation</h2>
+<h2>Containerization</h2>
+
 <p>Firstly we need to open a terminal window to start docker</p>
 
 ```bash
 sudo dockerd
 ```
 
-<p>In another terminal window, we type the commands bellow</p>
+<p>To start the containerization process (creation of the flask container and mongodb3 container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:
 
 ```bash
-sudo docker pull mongo #to pull the image from docker hub
-sudo docker pull mongo:4.0.4 #to download the latest version of MONGODB image
-sudo docker run -d -p 27017:27017 --name mongodb2 mongo:4.0.4 #to deploy image for the first time
-sudo docker start mongodb2 #to start mongodb2
+    sudo docker-compose up -d
 ```
 
-<p>Then we are going to use the Mongo Shell to create the DSMarket database, which will contain two collections. The fist one is called Users and contains the all the user's info and the second one is called Products and contains all the product's info. To access the mongo shell we type:</p>
+<p>Output:</p>
 
-```bash
-sudo docker exec -it mongodb mongo
+<img src="images/creating_done.png"/>
+     
+<p>In order for the command to work successfully, a dockerfile and a docker-compose.yml file have to be already created. Both of the files can be found bellow alongside with a brief explanation of the main/most important commands.</p>
+
+```dockerfile
+    FROM ubuntu:16.04 
+    RUN apt-get update 
+    RUN apt-get install -y python3 python3-dev python3-pip
+    # installing the dependencies
+    RUN pip3 install flask pymongo
+    RUN mkdir /app
+    COPY app2.py /app/app2.py
+    # specifying the port that the flask service will use
+    EXPOSE 5000
+    WORKDIR /app
+    ENTRYPOINT ["python3","-u","app2.py"] 
 ```
 
-<p>In Mongo Shell we type:</p>
-
-```bash
-use DSMarkets #to create DSMarkets db
+```yaml
+    version: '2'
+    services:
+        mongodb:    #mongodb service
+            image: mongo
+            restart: always #policy in case the container crushes
+            container_name: mongodb3
+            ports:  #specifying the ports that will be used for the mongodb service
+            - 27017:27017
+            volumes:    #data maintenance (data is saved in the current folder)
+            - .:/data/db
+        flask-service:   #flask service
+            build:  #building the flask container 
+                context: .  #the dockerfile and docker-compose.yml are located in the current folder
+            restart: always
+            container_name: flask
+            depends_on: #the flask service can start only if mongodb is up
+                - mongodb
+            ports:  #specifying the ports that will be used for the flask service
+                - 5000:5000
+            environment:    #specifying the access point to mongodb for the flask service
+                - "MONGO_HOSTNAME=mongodb"
 ```
-
-<em style="text-align: justify">This particular command is optional, since the database will be created automatically, when the app2.py project is executed even if it wasn't previously created</em>
 
 <p>When we are ready to run the project, we use the command python3 followed by the file name, as seen below.</p>
 
@@ -770,56 +798,4 @@ curl -X PATCH localhost:5000/updateProduct -d '{"email":"insert email here", "pr
     else:
         #Error response if user is not an admin
         return Response("User is not an admin\n", status=400, mimetype='application/json') 
-```
-
-<h2>Containerization</h2>
-
-<p>To start the containerization process (creation of the flask container and mongodb3 container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:
-
-```bash
-    sudo docker-compose up -d
-```
-
-<p>Output:</p>
-
-<img src="images/creating_done.png"/>
-     
-<p>In order for the command to work successfully, a dockerfile and a docker-compose.yml file have to be already created. Both of the files can be found bellow alongside with a brief explanation of the main/most important commands.</p>
-
-```dockerfile
-    FROM ubuntu:16.04 
-    RUN apt-get update 
-    RUN apt-get install -y python3 python3-dev python3-pip
-    # installing the dependencies
-    RUN pip3 install flask pymongo
-    RUN mkdir /app
-    COPY app2.py /app/app2.py
-    # specifying the port that the flask service will use
-    EXPOSE 5000
-    WORKDIR /app
-    ENTRYPOINT ["python3","-u","app2.py"] 
-```
-
-```yaml
-    version: '2'
-    services:
-        mongodb:    #mongodb service
-            image: mongo
-            restart: always #policy in case the container crushes
-            container_name: mongodb3
-            ports:  #specifying the ports that will be used for the mongodb service
-            - 27017:27017
-            volumes:    #data maintenance (data is saved in the current folder)
-            - .:/data/db
-        flask-service:   #flask service
-            build:  #building the flask container 
-                context: .  #the dockerfile and docker-compose.yml are located in the current folder
-            restart: always
-            container_name: flask
-            depends_on: #the flask service can start only if mongodb is up
-                - mongodb
-            ports:  #specifying the ports that will be used for the flask service
-                - 5000:5000
-            environment:    #specifying the access point to mongodb for the flask service
-                - "MONGO_HOSTNAME=mongodb"
 ```
