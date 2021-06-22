@@ -6,10 +6,10 @@ This project is about executing queries for a Mongodb database, using the pymong
 <p>Firstly we need to open a terminal window to start docker</p>
 
 ```bash
-sudo dockerd
+    sudo dockerd
 ```
 
-<p>To start the containerization process (creation of the flask container and mongodb container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:
+<p>To start the containerization process (creation of the flask container and mongodb container), while the docker is still running and every other container has stopped executing (necessary in case the same ports were being used), we type the command bellow in the terminal window:</p>
 
 ```bash
     sudo docker-compose up -d
@@ -61,10 +61,21 @@ sudo dockerd
                 - "MONGO_HOSTNAME=mongodb"
 ```
 
+<p>If we want to copy existing data to the database we can type the commands bellow in a terminal window</p>
+
+```bash
+    sudo docker cp users.json mongodb:/users.json
+    sudo docker exec -it mongodb mongoimport --db=DSMarkets --collection=Users --file=users.json --jsonArray
+    sudo docker cp products.json mongodb:/products.json
+    sudo docker exec -it mongodb mongoimport --db=DSMarkets --collection=Products --file=products.json --jsonArray
+```
+
+<em>note: If the json files aren't located in the default path, we use the cd command in order to relocate to the directory where the json files are located.</em>
+
 <p>When we are ready to run the project, we use the command python3 followed by the file name, as seen below.</p>
 
 ```bash
-python3 app2.py
+    python3 app2.py
 ```
 
 <em>note: If the app2.py file isn't located in the default path, we use the cd command in order to relocate to the directory where the file is located.</em>
