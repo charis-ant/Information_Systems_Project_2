@@ -30,6 +30,7 @@ sudo dockerd
     RUN mkdir /app
     RUN mkdir -p /app/data
     COPY app2.py /app/app2.py
+    ADD data /app/data
     # specifying the port that the flask service will use
     EXPOSE 5000
     WORKDIR /app
