@@ -1,4 +1,4 @@
-<h1>Ergasia2_e18011_Charis_Antoniadi</h1>
+<h1>Information Systems Project 2</h1>
 This project is about executing queries for a Mongodb database, using the pymongo module of python. The app2.py file contains thirteen endpoints, each used for the POST, GET, PATCH and DELETE HTTP methods.
 
 <h2>Containerization</h2>
